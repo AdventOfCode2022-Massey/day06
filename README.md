@@ -4,10 +4,18 @@ Ben and Bart Massey
 ---
 
 Bart decided to do his own solution early in branch
-`soln-bart`. A circular buffer seemed like an inefficient
+`soln-bart`.
+
+A circular buffer seemed like an inefficient
 but fun solution. With const generics, writing a circular
 buffer struct wasn't too bad.  Part 2 ended up free because
 just change the generics.
+
+The `unique()` primitive was
+naïvely *O(n^2)* where *n* is the target message length, but
+that was reduced to *O(n log n)* by constructing a
+`HashSet`: could be sped up to amortized *O(log n)* by
+not reconstructing the hash set each time, but meh.
 
 ---
 

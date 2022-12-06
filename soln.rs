@@ -33,14 +33,11 @@ impl<const N: usize, T> RingBuffer<N, T> {
 }
 
 fn unique<const N: usize>(chars: &[char; N]) -> bool {
-    for (i, c1) in chars.into_iter().enumerate() {
-        for c2 in chars[i + 1..].into_iter() {
-            if c1 == c2 {
-                return false;
-            }
-        }
-    }
-    true
+    let h: std::collections::HashSet<char> = chars
+        .iter()
+        .copied()
+        .collect();
+    h.len() == N
 }
 
 fn solve<const N: usize>() {
