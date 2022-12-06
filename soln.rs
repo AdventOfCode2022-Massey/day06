@@ -32,7 +32,7 @@ impl<const N: usize, T> RingBuffer<N, T> {
     }
 }
 
-fn unique(chars: &[char; 4]) -> bool {
+fn unique<const N: usize>(chars: &[char; N]) -> bool {
     for (i, c1) in chars.into_iter().enumerate() {
         for c2 in chars[i + 1..].into_iter() {
             if c1 == c2 {
@@ -43,32 +43,34 @@ fn unique(chars: &[char; 4]) -> bool {
     true
 }
 
-fn main() {
+fn solve<const N: usize>() {
     let mut input = String::new();
     std::io::stdin().read_to_string(&mut input).unwrap();
     let mut input = input.chars();
+    let init: [char; N] = input
+        .by_ref()
+        .take(N)
+        .collect::<Vec<char>>()
+        .try_into()
+        .unwrap();
+    let mut buf = RingBuffer::new(init);
+    if unique(buf.contents()) {
+        println!("{}", N);
+        return;
+    }
+    for (i, ch) in input.enumerate() {
+        buf.advance(ch);
+        if unique(buf.contents()) {
+            println!("{}", i + N + 1);
+            return;
+        }
+    }
+    eprintln!("no start found");
+}
+
+fn main() {
     match get_part() {
-        Part1 => {
-            let init: [char; 4] = input
-                .by_ref()
-                .take(4)
-                .collect::<Vec<char>>()
-                .try_into()
-                .unwrap();
-            let mut buf = RingBuffer::new(init);
-            if unique(buf.contents()) {
-                println!("4");
-                return;
-            }
-            for (i, ch) in input.enumerate() {
-                buf.advance(ch);
-                if unique(buf.contents()) {
-                    println!("{}", i + 5);
-                    return;
-                }
-            }
-            eprintln!("no start found");
-        },
-        Part2 => todo!(),
+        Part1 => solve::<4>(),
+        Part2 => solve::<14>(),
     }
 }
